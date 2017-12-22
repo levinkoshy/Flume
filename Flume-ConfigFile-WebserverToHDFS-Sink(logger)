@@ -1,0 +1,33 @@
+//Configuration file
+
+# Name the components on this agent
+wh.sources = ws
+wh.sinks = k1
+wh.channels = mem
+
+# Describe/configure the source
+wh.sources.ws.type = exec
+wh.sources.ws.command = tail -F /opt/gen_logs/logs/access.log
+//pulling the access log at regular intervals
+
+# Describe the sink
+wh.sinks.k1.type = logger
+
+# Use a channel which buffers events in memory
+wh.channels.mem.type = memory
+wh.channels.mem.capacity = 1000
+wh.channels.mem.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+wh.sources.ws.channels = mem
+wh.sinks.k1.channel = mem
+
+
+//wh - webserver to hdfs
+//ws - webserver
+//mem - memory --- replaces c1(channel)
+
+//sink - logger
+
+//to establish the connection//to start the agent
+flume-ng agent --name wh -conf-file /home/levinkoshy/flume_demo/wslogstohdfs/wshdfs.conf

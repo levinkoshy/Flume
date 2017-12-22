@@ -1,0 +1,58 @@
+//Defining Data model
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+# Describe/configure the source
+a1.sources.r1.type = netcat
+a1.sources.r1.bind = localhost
+a1.sources.r1.port = 44444
+
+# Describe the sink
+a1.sinks.k1.type = logger
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+
+//a1- agent name
+//source and sinks are connected through the channel
+//netcat - webserver simulator
+//sink type is logger => when ever you enter a message into the web server which is running on local host 44444 (tells how webservice should be run using netcat)
+//we can telnet into the webservice using local host 44444 combination
+
+//we wont use netcat and logger for projects; we use this only for exploratory purposes
+
+//control arguments for flume
+flume-ng
+
+//to start flume
+flume-ng agent --name a1 -conf-file /home/levinkoshy/flume_demo/example.conf
+
+--conf -didnt work
+
+//for giving input messages
+telnet localhost 44444
+
+cd /opt/gen_logs/
+//gen_logs - web server log simulator
+
+tail -F /opt/gen_logs/logs/access.log
+
+// web server to hdfs
+mkdir wslogstohdfs
+vi wshdfs.conf
+wh - webserver to hdfs
+ws - webserver
+mem - memory --- replaces c1(channel)
+
+//to establish the connection//to start the agent
+flume-ng agent --name wh -conf-file /home/levinkoshy/flume_demo/wslogstohdfs/wshdfs.conf
